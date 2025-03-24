@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicker Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #2c3e50;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        #clicker {
+            width: 120px;
+            height: 120px;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 20px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            outline: none;
+            transition: transform 0.1s;
+        }
+        #clicker:active {
+            transform: scale(0.9);
+        }
+        #score, #coins {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .store {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .store button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            transition: background 0.2s;
+        }
+        .store button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <button id="clicker">Click Me!</button>
+    <div id="score">Score: 0</div>
+    <div id="coins">Coins: 0</div>
+    <div class="store">
+        <button onclick="buyUpgrade(10, 1)">Upgrade 1 (+1 Click Power, 10 Coins)</button>
+        <button onclick="buyUpgrade(50, 5)">Upgrade 2 (+5 Click Power, 50 Coins)</button>
+        <button onclick="buyUpgrade(100, 10)">Upgrade 3 (+10 Click Power, 100 Coins)</button>
+        <button onclick="buyAutoClicker(200, 1)">Auto Clicker (+1/sec, 200 Coins)</button>
+        <button onclick="buyMultiplier(500, 2)">Double Coins (500 Coins)</button>
+    </div>
+    <script>
+        let score = 0;
+        let coins = 0;
+        let clickValue = 1;
+        let autoClicker = 0;
+        let coinMultiplier = 1;
+
+        const clickerButton = document.getElementById("clicker");
+        const scoreDisplay = document.getElementById("score");
+        const coinsDisplay = document.getElementById("coins");
+        
+        clickerButton.addEventListener("click", () => {
+            score += clickValue;
+            coins += clickValue * coinMultiplier;
+            updateDisplay();
+        });
+        
+        function buyUpgrade(cost, bonus) {
+            if (coins >= cost) {
+                coins -= cost;
+                clickValue += bonus;
+                updateDisplay();
+                alert("Upgrade purchased! Click power increased.");
+            } else {
+                alert("Not enough coins!");
+            }
+        }
+        
+        function buyAutoClicker(cost, rate) {
+            if (coins >= cost) {
+                coins -= cost;
+                autoClicker += rate;
+                updateDisplay();
+                alert("Auto Clicker purchased! You earn clicks automatically.");
+            } else {
+                alert("Not enough coins!");
+            }
+        }
+
+        function buyMultiplier(cost, multiplier) {
+            if (coins >= cost) {
+                coins -= cost;
+                coinMultiplier *= multiplier;
+                updateDisplay();
+                alert("Multiplier purchased! Your coins are worth more.");
+            } else {
+                alert("Not enough coins!");
+            }
+        }
+        
+        function updateDisplay() {
+            scoreDisplay.textContent = "Score: " + score;
+            coinsDisplay.textContent = "Coins: " + coins;
+        }
+        
+        setInterval(() => {
+            if (autoClicker > 0) {
+                score += autoClicker;
+                coins += autoClicker * coinMultiplier;
+                updateDisplay();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
